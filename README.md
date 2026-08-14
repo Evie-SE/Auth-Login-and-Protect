@@ -1,16 +1,36 @@
 # Auth · Login & Protect
 
-A Node.js & Express REST API using **Supabase Auth** for account creation, JWT authentication, and route protection.
+A secure Node.js & Express REST API using **Supabase Auth** for account management, JWT authentication, and protected routes guarded by middleware.
 
-## Progress
-- **Stage 0:** Initialized Express app, configured environment variables, and connected the Supabase SDK client.
-- **Stage 1:** Implemented `POST /auth/signup` (user registration, status 201) and `POST /auth/login` (JWT & refresh token generation, status 200/401).
+---
 
-## Quick Start
-1. Install dependencies: `npm install`
-2. Configure `.env`:
-   ```env
-   SUPABASE_URL=your_supabase_url
-   SUPABASE_KEY=your_supabase_key
-   PORT=3000
-3. Run server: node app.js
+## 🚀 Progress So Far
+
+### Stage 0: Setup & Infrastructure
+- [x] Initialized Node.js environment with Express framework.
+- [x] Configured `.env` secrets (`SUPABASE_URL`, `SUPABASE_KEY`) and added `.gitignore`.
+- [x] Connected to Supabase Auth client using `@supabase/supabase-js`.
+
+### Stage 1: Open Auth — Sign Up & Log In
+- [x] **`POST /auth/signup`**: Registers users via Supabase (`201 Created` on success, `400` on missing fields).
+- [x] **`POST /auth/login`**: Authenticates users and returns JWT access & refresh tokens (`200 OK` on success, `401` on invalid credentials).
+
+### Stage 2 & 3: Public Gates & Token Verification
+- [x] **`GET /public/info`**: Public endpoint returning `200 OK` without authentication.
+- [x] **`GET /protected/profile`**: Token verification using `supabase.auth.getUser(token)`. Returns `401 Unauthorized` if token is missing, expired, or tampered with.
+
+### Stage 4: Middleware Protection (In Progress)
+- [x] **Reusable Auth Middleware (`requireAuth`)**: Extracted token verification logic into a standalone Express middleware that attaches `req.user`.
+- [x] **Applied Guard to Protected Routes**: Protected both `GET /protected/profile` and a secondary `GET /protected/dashboard` route using the `requireAuth` middleware.
+- [ ] **`POST /auth/logout`**: *Up next!*
+
+---
+
+## 🛠️ Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+SUPABASE_URL=[https://your-project-id.supabase.co](https://your-project-id.supabase.co)
+SUPABASE_KEY=your-supabase-anon-key
+PORT=3000
