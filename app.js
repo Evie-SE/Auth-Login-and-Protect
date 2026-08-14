@@ -11,6 +11,7 @@ const supabase = createClient(
 
 app.use(express.json());
 
+//Stage 1
 app.post("/auth/signup", async (req, res) => {
   const { email, password } = req.body;
 
@@ -61,6 +62,7 @@ app.get("/public/info", async (req, res) => {
     .status(200)
     .json({ message: "Welcome stranger! This info is public." });
 });
+//Stage 2
 /*
 app.get("/protected/profile", async (req, res) => {
   const authHeader = req.headers.authorization;
@@ -78,7 +80,10 @@ app.get("/protected/profile", async (req, res) => {
   return res.status(200).json({ message: "Token presented successfully" });
 });
 */
-app.get("/protected/profile", async (req, res) => {
+
+//Stage 3
+/*app.get("/protected/profile", async (req, res) => {
+  
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer")) {
@@ -101,6 +106,39 @@ app.get("/protected/profile", async (req, res) => {
       id: user.id,
       email: user.email,
       created_at: user.created_at,
+    },
+  });
+}); */
+
+//Stage 4
+const requireAuth = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer")) {
+    return res.status(401).json({ error: "Access token required" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser(token);
+
+  if (error || !user) {
+    return res.status(401).json({ error: "Invalid or expired token" });
+  }
+
+  req.user = user;
+  next();
+};
+
+app.get("/protected/profile", requireAuth, (req, res) => {
+  return res.status(200).json({
+    user: {
+      id: req.user.id,
+      email: req.user.email,
+      created_at: req.user.created_at,
     },
   });
 });
