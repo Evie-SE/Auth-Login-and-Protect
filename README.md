@@ -20,7 +20,7 @@ A secure Node.js & Express REST API using **Supabase Auth** for account manageme
 - [x] **`GET /protected/profile`**: Token verification using `supabase.auth.getUser(token)`. Returns `401 Unauthorized` if token is missing, expired, or tampered with.
 
 ### Stage 4: Middleware Protection (In Progress)
-- [x] **Reusable Auth Middleware (`requireAuth`)**: Extracted token verification logic into a standalone Express middleware that attaches `req.user`.
+- [x] **Reusablve Auth Middleware (`requireAuth`)**: Extracted token verification logic into a standalone Express middleware that attaches `req.user`.
 - [x] **Applied Guard to Protected Routes**: Protected both `GET /protected/profile` and a secondary `GET /protected/dashboard` route using the `requireAuth` middleware.
 - [ ] **`POST /auth/logout`**: *Up next!*
 

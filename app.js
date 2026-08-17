@@ -143,6 +143,21 @@ app.get("/protected/profile", requireAuth, (req, res) => {
   });
 });
 
+app.get("/protected/dashboard", requireAuth, async (req, res) => {
+  return res.status(200).json({
+    message: `Welcome to your dashboard, ${req.user.email}!`,
+  })
+})
+
+app.post("/auth/logout", requireAuth, async (req, res) => {
+  const {error} = await supabase.auth.signOut();
+
+  if (error) {
+    return res.status(400).json({error: error.message});
+  }
+
+  return res.status(204).send();
+})
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
